@@ -1,0 +1,338 @@
+MDS-EVENT-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, 
+    OBJECT-TYPE, 
+    NOTIFICATION-TYPE
+        FROM SNMPv2-SMI
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP, 
+    NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    TEXTUAL-CONVENTION,
+    TruthValue
+        FROM SNMPv2-TC
+    mdsLogging
+        FROM MDS-ORBIT-SMI-MIB;
+
+mdsEventMIB MODULE-IDENTITY
+    LAST-UPDATED "201805160000Z" -- May 16, 2018
+    ORGANIZATION 
+        "GE MDS LLC
+        http://www.gemds.com"
+    CONTACT-INFO
+        "T 1-800-474-0694 (Toll Free in North America)
+        T 585-242-9600
+        F 585-242-9620
+
+        175 Science Parkway
+        Rochester, New York 14620
+        USA"
+    DESCRIPTION
+            "Notifications for GE MDS products."
+    REVISION    "201805160000Z"
+    DESCRIPTION
+        "Updated conformance statments based on smilint."
+    REVISION    "201304220000Z"
+    DESCRIPTION
+        "Initial version."
+    ::= { mdsLogging 1 }
+
+mdsEventMIBObjects OBJECT IDENTIFIER
+    ::= { mdsEventMIB 1 }
+
+mdsEventMIBNotifications OBJECT IDENTIFIER
+    ::= { mdsEventMIB 2 }
+
+mdsEventVariables OBJECT IDENTIFIER
+    ::= { mdsEventMIBObjects 1 }
+
+-- Textual Conventions
+MdsActionTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Action tag"
+    SYNTAX      INTEGER {confirmedCommit(0),export(1),import(2),renew(3),request(4),resolve(5)}
+
+CeeActionTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Action tag"
+    SYNTAX      INTEGER {actionAccess(0),actionAlert(1),actionAllocate(2),actionAllow(3),actionAudit(4),actionBackup(5),actionBind(6),actionBlock(7),actionClean(8),actionClose(9),actionCompress(10),actionConnect(11),actionCopy(12),actionCreate(13),actionDecode(14),actionDecompress(15),actionDecrypt(16),actionDepress(17),actionDetect(18),actionDisconnect(19),actionDownload(20),actionEncode(21),actionEncrypt(22),actionExecute(23),actionFilter(24),actionFind(25),actionFree(26),actionGet(27),actionInitialize(28),actionInitiate(29),actionInstall(30),actionLock(31),actionLogin(32),actionLogout(33),actionModify(34),actionMove(35),actionOpen(36),actionQuarantine(37),actionRead(38),actionRelease(39),actionRemove(40),actionReplicate(41),actionResume(42),actionSave(43),actionScan(44),actionSearch(45),actionStart(46),actionStop(47),actionSuspend(48),actionUninstall(49),actionUnlock(50),actionUpdate(51),actionUpgrade(52),actionUpload(53),actionViolate(54),actionWrite(55)}
+
+MdsObjectTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Object tag"
+    SYNTAX      INTEGER {objectCard(0),objectCellRoaming(1),objectCellService(2),objectCellSim(3),objectCellFirmware(4),objectCertificate(5),objectConfigurationFile(6),objectDatetime(7),objectDdns(8),objectEventLog(9),objectFirmware(10),objectInterface(11),objectPowerSupply(12),objectPrivateKey(13),objectRecord(14),objectSupportPackage(15),objectIoPin(16)}
+
+CeeObjectTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Object tag"
+    SYNTAX      INTEGER {objectAccount(0),objectApp(1),objectBios(2),objectDriver(3),objectEmail(4),objectEvent(5),objectFile(6),objectFlow(7),objectConnection(8),objectMemory(9),objectPacket(10),objectProcess(11),objectRule(12),objectSession(13),objectSystem(14),objectThread(15),objectVuln(16)}
+
+MdsServiceTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Service tag"
+    SYNTAX      INTEGER {serviceCrypto(0),serviceConsole(1),serviceCellMgr(2),serviceDhcpClient(3),serviceDhcpServer(4),serviceDlinkTcp(5),serviceDns(6),serviceNetconf(7),serviceNetworkMgr(8),serviceNtp(9),serviceNxMgr(10),serviceRoutingMgr(11),serviceSsh(12),serviceSystemMgr(13),serviceTamperDetection(14),serviceTelnet(15),serviceTerminalServer(16),serviceVpn(17),serviceOpenvpn(18),serviceWifiMgr(19),serviceDdnsClient(20),serviceRemoteManagement(21),serviceZtp(22),serviceIo(23),serviceFirewall(24)}
+
+CeeServiceTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Services tag"
+    SYNTAX      INTEGER {serviceAudit(0),serviceAuth(1),serviceAuthorize(2),serviceBackup(3),serviceDb(4),serviceEmail(5),serviceFw(6),serviceWeb(7)}
+
+MdsDomainTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Domain tag"
+    SYNTAX      INTEGER {domainCard(0),domainPowerSupply(1)}
+
+CeeDomainTag ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "Domain tag"
+    SYNTAX      INTEGER {domainApp(0),domainDevice(1),domainNet(2),domainOs(3)}
+
+-- Notification objects
+mdsEventName OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION    
+        "The name of the event."
+    ::= { mdsEventVariables 1 }
+
+mdsEventInfoInCee OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..65535))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION    
+        "The detailed information about the event encoded 
+        in Common Event Expression (CEE) format."
+    ::= { mdsEventVariables 2 }
+
+mdsEventStatus OBJECT-TYPE
+    SYNTAX      INTEGER {cancel(0),error(1),failure(2),ongoing(3),success(4),unknown(5)}
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the event status."
+    ::= { mdsEventVariables 3 }
+
+mdsEventAction OBJECT-TYPE
+    SYNTAX      MdsActionTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the event action."
+    ::= { mdsEventVariables 4 }
+
+ceeEventAction OBJECT-TYPE
+    SYNTAX      CeeActionTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the event action."
+    ::= { mdsEventVariables 5 }
+
+mdsEventExtra OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..65535))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the event extra information."
+    ::= { mdsEventVariables 6 }
+
+mdsEventInterface OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the event user."
+    ::= { mdsEventVariables 7 }
+
+mdsEventUser OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the event user."
+    ::= { mdsEventVariables 8 }
+
+mdsEventSetting OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..65535))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the summary of settings change."
+    ::= { mdsEventVariables 9 }
+
+mdsEventSource OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the network source assicated with the event"
+    ::= { mdsEventVariables 10 }
+
+mdsEventDestination OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the network destination assicated with the event"
+    ::= { mdsEventVariables 11 }
+
+mdsEventDomain OBJECT-TYPE
+    SYNTAX      MdsDomainTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "The domain property of the event"
+    ::= { mdsEventVariables 12 }
+
+ceeEventDomain OBJECT-TYPE
+    SYNTAX      CeeDomainTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "The domain property of the event"
+    ::= { mdsEventVariables 13 }
+
+mdsEventService OBJECT-TYPE
+    SYNTAX      MdsServiceTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "The services property of the event"
+    ::= { mdsEventVariables 14 }
+
+ceeEventService OBJECT-TYPE
+    SYNTAX      CeeServiceTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "The services property of the event"
+    ::= { mdsEventVariables 15 }
+
+mdsEventObject OBJECT-TYPE
+    SYNTAX      MdsObjectTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "The object property of the event"
+    ::= { mdsEventVariables 16 }
+
+ceeEventObject OBJECT-TYPE
+    SYNTAX      CeeObjectTag
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "The object property of the event"
+    ::= { mdsEventVariables 17 }
+
+mdsEventFile OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the file assicated with the event"
+    ::= { mdsEventVariables 18 }
+
+mdsEventHostname OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Hostname of device generating event"
+    ::= { mdsEventVariables 19 }
+
+mdsEventTimestamp OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Timestamp of the event"
+    ::= { mdsEventVariables 20 }
+
+mdsEventVersion OBJECT-TYPE
+    SYNTAX      OCTET STRING (SIZE (0..255))
+    MAX-ACCESS  read-write
+    STATUS      current
+    DESCRIPTION
+        "Specifies the version assicated with the event"
+    ::= { mdsEventVariables 21 }
+
+-- Notifications
+
+-- This is needed to make NOTIFICATION-TYPEs reverse-mappable
+traps0  OBJECT IDENTIFIER ::= { mdsEventMIBNotifications 1 }
+traps   OBJECT IDENTIFIER ::= { traps0 0 }
+
+mdsEvent NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "This is the common notification sent for any events
+        generated by various subsystems in the product."
+    ::= { traps 1 }
+
+ioEvent NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "I/O Event traps are generated when trigger conditions on I/O pins are met."
+    ::= { traps 2 }
+
+-- Conformance information
+mdsEventMIBConformance  OBJECT IDENTIFIER ::= { mdsEventMIB 3 }
+mdsEventMIBCompliances OBJECT IDENTIFIER ::= { mdsEventMIBConformance 1 }
+mdsEventMIBGroups      OBJECT IDENTIFIER ::= { mdsEventMIBConformance 2 }
+
+-- Compliance statements
+mdsEventMIBCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+        "The compliance statement for SNMP entities that
+        implement the MDS-EVENT-MIB."
+    MODULE -- this module
+        MANDATORY-GROUPS {
+            mdsEventNotificationsGroup
+        }
+        GROUP   mdsEventVariablesCeeGroup
+        DESCRIPTION
+            "This group is mandatory for SNMP entities that
+            support event information encoded in CEE format."
+
+    ::= { mdsEventMIBCompliances 2 }
+
+-- Units of Conformance
+mdsEventNotificationsGroup  NOTIFICATION-GROUP
+    NOTIFICATIONS {
+        mdsEvent, ioEvent
+    }
+    STATUS  current
+    DESCRIPTION
+        "The common notifications."
+    ::= { mdsEventMIBGroups 1 }
+
+mdsEventVariablesCeeGroup OBJECT-GROUP
+    OBJECTS {
+        mdsEventName,
+        mdsEventInfoInCee,
+		mdsEventStatus,
+		mdsEventAction,
+		ceeEventAction,
+		mdsEventExtra,
+		mdsEventInterface,
+		mdsEventUser,
+		mdsEventSetting,
+		mdsEventSource,
+		mdsEventDestination,
+		mdsEventDomain,
+		ceeEventDomain,
+		mdsEventService,
+		ceeEventService,
+		mdsEventObject,
+		ceeEventObject
+    }
+    STATUS  current
+    DESCRIPTION
+        "Information to support events that encode event 
+        information in CEE format."
+    ::= { mdsEventMIBGroups 2 }
+
+END

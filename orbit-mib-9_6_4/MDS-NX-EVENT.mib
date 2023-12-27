@@ -1,0 +1,285 @@
+MDS-NX-EVENT DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY,
+    OBJECT-TYPE,
+    NOTIFICATION-TYPE
+        FROM SNMPv2-SMI
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP,
+    NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    mdsEventMIB,
+    mdsEventVariablesCeeGroup
+        FROM MDS-EVENT-MIB;
+
+mdsNxEventMIB MODULE-IDENTITY
+    LAST-UPDATED "202112060000Z"
+    ORGANIZATION
+        "GE MDS LLC
+        http://www.gemds.com"
+    CONTACT-INFO
+        "T 1-800-474-0694 (Toll Free in North America)
+        T 585-242-9600
+        F 585-242-9620
+
+        175 Science Parkway
+        Rochester, New York 14620
+        USA"
+    DESCRIPTION
+        "Notifications from the NX,LN and LW interface"
+    REVISION    "202112060000Z"
+    DESCRIPTION
+        "Initial revision"
+    ::= { mdsEventMIB 11 }
+
+mdsNxEventMIBNotifications OBJECT IDENTIFIER
+    ::= { mdsNxEventMIB 1 }
+traps0  OBJECT IDENTIFIER ::= { mdsNxEventMIBNotifications 1 }
+traps   OBJECT IDENTIFIER ::= { traps0 0 }
+
+nxConnection NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NX connection"
+    ::= { traps 1 }
+
+lwFrequency NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Bad LW frequency"
+    ::= { traps 2 }
+
+lnFrequency NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Bad LN frequency"
+    ::= { traps 3 }
+
+lnHostActivity NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The LN NIC has not gotten messages from the host card"
+    ::= { traps 4 }
+
+lnConnection NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "LN connection"
+    ::= { traps 5 }
+
+lwConnection NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "LW connection"
+    ::= { traps 6 }
+
+nicReprogram NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Module reprogramming"
+    ::= { traps 7 }
+
+nxAuth NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NX Authentication event"
+    ::= { traps 8 }
+
+lnAuth NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "LN Authentication event"
+    ::= { traps 9 }
+
+lwAuth NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "LW Authentication event"
+    ::= { traps 10 }
+
+nxEncryptWarning NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NX Encryption Warning Event"
+    ::= { traps 11 }
+
+nxEncryptError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NX Encryption Error Event"
+    ::= { traps 12 }
+
+nxVswr NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC VSWR alert"
+    ::= { traps 13 }
+
+nxTemp NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC temprature alert"
+    ::= { traps 14 }
+
+nxCal NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC calibration alert"
+    ::= { traps 15 }
+
+nxRssiError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The nic has had too many out of specification RSSI values"
+    ::= { traps 16 }
+
+nxRetryError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The nic has had too many transmit retries"
+    ::= { traps 17 }
+
+lnVswr NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC VSWR alert"
+    ::= { traps 18 }
+
+lnTemp NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC temprature alert"
+    ::= { traps 19 }
+
+lnEvmError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The nic has had too many out of specification EVM values"
+    ::= { traps 20 }
+
+lnRssiError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The nic has had too many out of specification RSSI values"
+    ::= { traps 21 }
+
+lnRetryError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The nic has had too many transmit retries"
+    ::= { traps 22 }
+
+lwRssiError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The nic has had too many out of specification RSSI values"
+    ::= { traps 23 }
+
+lwRetryError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The nic has had too many transmit retries"
+    ::= { traps 24 }
+
+lwTemp NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC temprature alert"
+    ::= { traps 25 }
+
+lnCal NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC calibration alert"
+    ::= { traps 26 }
+
+lwCal NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC calibration alert"
+    ::= { traps 27 }
+
+nxProvision NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC provisioning"
+    ::= { traps 28 }
+
+lnProvision NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC provisioning"
+    ::= { traps 29 }
+
+lwProvision NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "NIC provisioning"
+    ::= { traps 30 }
+
+poorVswr NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Poor VSWR. Check antenna connection."
+    ::= { traps 31 }
+
+mdsNxEventMIBConformance  OBJECT IDENTIFIER ::= { mdsNxEventMIB 3 }
+mdsNxEventMIBCompliances OBJECT IDENTIFIER ::= { mdsNxEventMIBConformance 1 }
+mdsNxEventMIBGroups      OBJECT IDENTIFIER ::= { mdsNxEventMIBConformance 2 }
+
+mdsNxEventMIBCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+        "The compliance statement for SNMP entities that
+        implement the MDS-EVENT-MIB."
+    MODULE -- this module
+        MANDATORY-GROUPS {
+            mdsNxEventNotificationsGroup
+        }
+        GROUP   mdsEventVariablesCeeGroup
+        DESCRIPTION
+            "This group is mandatory for SNMP entities that
+            support event information encoded in CEE format."
+    ::= { mdsNxEventMIBCompliances 2 }
+
+mdsNxEventNotificationsGroup  NOTIFICATION-GROUP
+    NOTIFICATIONS {
+        nxConnection,
+        lwFrequency,
+        lnFrequency,
+        lnHostActivity,
+        lnConnection,
+        lwConnection,
+        nicReprogram,
+        nxAuth,
+        lnAuth,
+        lwAuth,
+        nxEncryptWarning,
+        nxEncryptError,
+        nxVswr,
+        nxTemp,
+        nxCal,
+        nxRssiError,
+        nxRetryError,
+        lnVswr,
+        lnTemp,
+        lnEvmError,
+        lnRssiError,
+        lnRetryError,
+        lwRssiError,
+        lwRetryError,
+        lwTemp,
+        lnCal,
+        lwCal,
+        nxProvision,
+        lnProvision,
+        lwProvision,
+        poorVswr
+    }
+    STATUS  current
+    DESCRIPTION
+        "The common notifications."
+    ::= { mdsNxEventMIBGroups 1 }
+
+END

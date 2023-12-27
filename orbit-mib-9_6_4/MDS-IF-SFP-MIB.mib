@@ -1,0 +1,157 @@
+MDS-IF-SFP-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, 
+    OBJECT-TYPE, 
+    Integer32,
+    Unsigned32,
+    IpAddress
+        FROM SNMPv2-SMI
+    TEXTUAL-CONVENTION,
+    DisplayString,
+    TruthValue,
+		MacAddress
+        FROM SNMPv2-TC
+    MODULE-COMPLIANCE, 
+    OBJECT-GROUP
+        FROM SNMPv2-CONF
+    ifIndex
+        FROM IF-MIB
+    mdsInterfaces
+        FROM MDS-ORBIT-SMI-MIB;
+
+mdsIfSfpMIB MODULE-IDENTITY
+    LAST-UPDATED "202106140000Z" -- June 14, 2021
+    ORGANIZATION 
+      "GE MDS LLC
+      http://www.gemds.com"
+    CONTACT-INFO
+      "T 1-800-474-0694 (Toll Free in North America)
+       T 585-242-9600
+       F 585-242-9620
+
+       175 Science Parkway
+       Rochester, New York 14620
+       USA"
+    DESCRIPTION
+      "The MIB module to describe the SFP interface." 
+    REVISION      "202106140000Z"
+    DESCRIPTION
+      "Initial version."
+    ::= { mdsInterfaces 8 }
+
+mIfSfpMIBObjects OBJECT IDENTIFIER
+    ::= { mdsIfSfpMIB 1 }
+
+mIfSfpConfig OBJECT IDENTIFIER
+    ::= { mIfSfpMIBObjects 1 }
+
+mIfSfpStatus OBJECT IDENTIFIER
+    ::= { mIfSfpMIBObjects 2 }
+
+-- Textual Conventions
+SfpModuleType ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "SFP Module Type"
+    SYNTAX      INTEGER {notPresent(0),sff8079(1),sff8472(2),sff8636(3),sff8436(4)}
+
+SfpIdentifierType ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "SFP Identifier"
+    SYNTAX      INTEGER {unknown(0),gbic(1),solderedModule(2),sfp(3),xbi300pin(4),xenpak(5),xfp(6),xff(7),xfpE(8),xpak(9),x2(10),dwdmSfp(11),qsfp(12),qsfpPlus(13),cpx(14),hd4x(15),hd8x(16),qsfp28(17),cxp2(18),cdfp(19),hd4xFanout(20),hd8xFanout(21),cdfpS3(22),microQsfp(23)}
+
+SfpEncodingType ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "SFP encoding"
+    SYNTAX      INTEGER {unspecified(0),e8b10b(1),e4b5b(2),nzr(3),e4h(4),e5h(5),e6h(6),e256b(7),pam4(8)}
+
+
+-- SFP Status Objects
+mIfSfpStatusTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF MIfSfpStatusEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+        "This table contains status of SFP interfaces. This table has 
+         a sparse dependent relationship on the ifTable. For each entry in 
+         this table, there exists an entry in the ifTable."
+    ::= { mIfSfpStatus 1 }
+
+mIfSfpStatusEntry OBJECT-TYPE
+    SYNTAX      MIfSfpStatusEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Each entry contains status of a SFP interface."
+    INDEX   { ifIndex }
+    ::= { mIfSfpStatusTable 1 }
+
+MIfSfpStatusEntry ::=
+    SEQUENCE {
+        mIfSfpModuleType SfpModuleType,
+        mIfSfpIdentifier SfpIdentifierType,
+        mIfSfpEncoding SfpEncodingType,
+        mIfSfpNominalBitrate Unsigned32
+    }
+
+mIfSfpModuleType OBJECT-TYPE
+    SYNTAX      SfpModuleType
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "module type."
+    ::= { mIfSfpStatusEntry 1 }
+
+mIfSfpIdentifier OBJECT-TYPE
+    SYNTAX      SfpIdentifierType
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "SFP identifier."
+    ::= { mIfSfpStatusEntry 2 }
+
+mIfSfpEncoding OBJECT-TYPE
+    SYNTAX      SfpEncodingType
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The SFP encoding."
+    ::= { mIfSfpStatusEntry 3 }
+
+mIfSfpNominalBitrate OBJECT-TYPE
+    SYNTAX      Unsigned32
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The current NIC alarms."
+    ::= { mIfSfpStatusEntry 4 }
+
+
+-- conformance information
+mdsIfSfpMIBConformance   OBJECT IDENTIFIER ::= { mdsIfSfpMIB 2 }
+mdsIfSfpMIBCompliances OBJECT IDENTIFIER ::= { mdsIfSfpMIBConformance 1 }
+mdsIfSfpMIBGroups      OBJECT IDENTIFIER ::= { mdsIfSfpMIBConformance 2 }
+
+-- compliance statements
+mIfSfpCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+            "The compliance statement for SNMP entities that 
+            implement the MDS-IF-SFP-MIB."
+    MODULE  -- this module
+        MANDATORY-GROUPS {
+            mIfSfpStatusGroup
+        }
+    ::= { mdsIfSfpMIBCompliances 1 }
+
+-- units of conformance
+mIfSfpStatusGroup OBJECT-GROUP
+    OBJECTS {
+      mIfSfpModuleType,
+      mIfSfpIdentifier,
+      mIfSfpEncoding,
+      mIfSfpNominalBitrate
+    }
+    STATUS  current
+    DESCRIPTION
+        "A collection of objects providing information about
+        common SFP interface status."
+    ::= { mdsIfSfpMIBGroups 1 }
+
+END

@@ -1,0 +1,232 @@
+MDS-IF-COMMON-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY, 
+    OBJECT-TYPE, 
+    Integer32,
+    Unsigned32,
+    IpAddress FROM SNMPv2-SMI
+    TEXTUAL-CONVENTION,
+    DisplayString,
+    TruthValue
+        FROM SNMPv2-TC
+    MODULE-COMPLIANCE, 
+    OBJECT-GROUP
+        FROM SNMPv2-CONF
+    ifIndex
+        FROM IF-MIB
+    mdsInterfaces
+        FROM MDS-ORBIT-SMI-MIB;
+
+mdsIfCommonMIB MODULE-IDENTITY
+    LAST-UPDATED "202001080000Z" -- September 13, 2018
+    ORGANIZATION 
+      "GE MDS LLC
+      http://www.gemds.com"
+    CONTACT-INFO
+      "T 1-800-474-0694 (Toll Free in North America)
+       T 585-242-9600
+       F 585-242-9620
+
+       175 Science Parkway
+       Rochester, New York 14620
+       USA"
+    DESCRIPTION
+      "The MIB module to describe common MDS interface features."
+	REVISION      "202001080000Z"
+    DESCRIPTION
+      "Initial version."
+    ::= { mdsInterfaces 7 }
+
+mIfCommonMIBObjects OBJECT IDENTIFIER
+    ::= { mdsIfCommonMIB 1 }
+
+mIfCommonConfig OBJECT IDENTIFIER
+    ::= { mIfCommonMIBObjects 1 }
+
+mIfCommonStatus OBJECT IDENTIFIER
+    ::= { mIfCommonMIBObjects 2 }
+
+-- Textual Conventions
+UnsignedByte ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d"
+    STATUS      current
+    DESCRIPTION "xs:unsignedByte"
+    SYNTAX      Unsigned32 (0 .. 255)
+
+UnsignedShort ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d"
+    STATUS      current
+    DESCRIPTION "xs:unsignedShort"
+    SYNTAX      Unsigned32 (0 .. 65535)
+
+VrrpStatus ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "VRRP Status"
+    SYNTAX      INTEGER {disabled(0),initializing(1),master(2),backup(3)}
+
+VrrpIdType ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d"
+    STATUS      current
+    DESCRIPTION "xs:unsignedByte"
+    SYNTAX      Unsigned32 (1 .. 255)
+
+VrrpPrioType ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d"
+    STATUS      current
+    DESCRIPTION "xs:unsignedByte"
+    SYNTAX      Unsigned32 (1 .. 255)
+
+VrrpAdvertType ::= TEXTUAL-CONVENTION
+    DISPLAY-HINT "d"
+    STATUS      current
+    DESCRIPTION "xs:unsignedByte"
+    SYNTAX      Unsigned32 (1 .. 255)
+
+InetIpAddress ::= TEXTUAL-CONVENTION
+    STATUS      current
+    DESCRIPTION "IP Address"
+    SYNTAX      OCTET STRING (SIZE (4|16))
+
+-- Lw Status Objects
+mIfVrrpConfigTable OBJECT-TYPE
+    SYNTAX      SEQUENCE OF MIfVrrpConfigEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+        "This table contains the current configuration of VRRP on an interface."
+    ::= { mIfCommonConfig 1 }
+
+mIfVrrpConfigEntry OBJECT-TYPE
+    SYNTAX      MIfVrrpConfigEntry
+    MAX-ACCESS  not-accessible
+    STATUS      current
+    DESCRIPTION
+            "Each entry contains configuration of the VRRP on an interface."
+    INDEX   { ifIndex }
+    ::= { mIfVrrpConfigTable 1 }
+
+MIfVrrpConfigEntry ::=
+    SEQUENCE {
+        mIfVrrpEnabled TruthValue,
+        mIfVrrpAddress InetIpAddress,
+        mIfVrrpSubnetMask InetIpAddress,
+        mIfVrrpId VrrpIdType,
+        mIfVrrpPriority VrrpPrioType,
+        mIfVrrpAdvInter VrrpAdvertType,
+        mIfVrrpPreemption TruthValue,
+        mIfVrrpVirtualMac TruthValue,
+        mIfVrrpVerifyOperation OCTET STRING,
+        mIfVrrpVerifyPriority UnsignedByte
+    }
+
+mIfVrrpEnabled OBJECT-TYPE
+    SYNTAX      TruthValue
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "True if enabled."
+    ::= { mIfVrrpConfigEntry 1 }
+
+mIfVrrpAddress OBJECT-TYPE
+    SYNTAX      InetIpAddress
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Virtual Router IP address."
+    ::= { mIfVrrpConfigEntry 2 }
+
+mIfVrrpSubnetMask OBJECT-TYPE
+    SYNTAX      InetIpAddress
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Virtual Router IP subnet. "
+    ::= { mIfVrrpConfigEntry 3 }
+
+mIfVrrpId OBJECT-TYPE
+    SYNTAX      VrrpIdType
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Virtual Router Id"
+    ::= { mIfVrrpConfigEntry 4 }
+
+mIfVrrpPriority OBJECT-TYPE
+    SYNTAX      VrrpPrioType
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Serial Number."
+    ::= { mIfVrrpConfigEntry 5 }
+
+mIfVrrpAdvInter OBJECT-TYPE
+    SYNTAX      VrrpAdvertType
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "Priority of this physical router in the VRRP group"
+    ::= { mIfVrrpConfigEntry 6 }
+
+mIfVrrpPreemption OBJECT-TYPE
+    SYNTAX      TruthValue
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The Hardware ID."
+    ::= { mIfVrrpConfigEntry 7 }
+
+mIfVrrpVirtualMac OBJECT-TYPE
+    SYNTAX      TruthValue
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The Hardware Revision."
+    ::= { mIfVrrpConfigEntry 8 }
+
+mIfVrrpVerifyOperation OBJECT-TYPE
+    SYNTAX      OCTET STRING
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The Hardware Revision."
+    ::= { mIfVrrpConfigEntry 9 }
+
+mIfVrrpVerifyPriority OBJECT-TYPE
+    SYNTAX      UnsignedByte
+    MAX-ACCESS  read-only
+    STATUS      current
+    DESCRIPTION "The Hardware Revision."
+    ::= { mIfVrrpConfigEntry 10 }
+
+
+-- conformance information
+mdsIfCommonMIBConformance   OBJECT IDENTIFIER ::= { mdsIfCommonMIB 3 }
+mdsIfCommonMIBCompliances OBJECT IDENTIFIER ::= { mdsIfCommonMIBConformance 1 }
+mdsIfCommonMIBGroups      OBJECT IDENTIFIER ::= { mdsIfCommonMIBConformance 2 }
+
+-- compliance statements
+mIfLwCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+            "The compliance statement for SNMP entities that 
+            implement the MDS-IF-COMMON-MIB."
+    MODULE  -- this module
+        MANDATORY-GROUPS {
+            mIfLwStatusGroup 
+        }
+    ::= { mdsIfCommonMIBCompliances 1 }
+
+-- units of conformance
+mIfVrrpConfigGroup OBJECT-GROUP
+    OBJECTS {
+        mIfVrrpEnabled,
+        mIfVrrpAddress,
+        mIfVrrpSubnetMask,
+        mIfVrrpId,
+        mIfVrrpPriority,
+        mIfVrrpAdvInter,
+        mIfVrrpPreemption,
+        mIfVrrpVirtualMac,
+		mIfVrrpVerifyOperation,
+		mIfVrrpVerifyPriority
+    }
+    STATUS  current
+    DESCRIPTION
+        "A collection of objects providing information about
+        common VRRP interface Configuration."
+    ::= { mdsIfCommonMIBGroups 1 }
+
+
+END
