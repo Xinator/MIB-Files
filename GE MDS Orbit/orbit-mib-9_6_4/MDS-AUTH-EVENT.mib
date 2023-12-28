@@ -1,0 +1,82 @@
+MDS-AUTH-EVENT DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY,
+    OBJECT-TYPE,
+    NOTIFICATION-TYPE
+        FROM SNMPv2-SMI
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP,
+    NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    mdsEventMIB,
+    mdsEventVariablesCeeGroup
+        FROM MDS-EVENT-MIB;
+
+mdsAuthEventMIB MODULE-IDENTITY
+    LAST-UPDATED "202112060000Z"
+    ORGANIZATION
+        "GE MDS LLC
+        http://www.gemds.com"
+    CONTACT-INFO
+        "T 1-800-474-0694 (Toll Free in North America)
+        T 585-242-9600
+        F 585-242-9620
+
+        175 Science Parkway
+        Rochester, New York 14620
+        USA"
+    DESCRIPTION
+        "Notifications from authentication"
+    REVISION    "202112060000Z"
+    DESCRIPTION
+        "Initial revision"
+    ::= { mdsEventMIB 13 }
+
+mdsAuthEventMIBNotifications OBJECT IDENTIFIER
+    ::= { mdsAuthEventMIB 1 }
+traps0  OBJECT IDENTIFIER ::= { mdsAuthEventMIBNotifications 1 }
+traps   OBJECT IDENTIFIER ::= { traps0 0 }
+
+radiusServerFailure NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Failed to connect to a RADIUS server"
+    ::= { traps 1 }
+
+tacacsplusServerFailure NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Failed to connect to a TACACS+ server"
+    ::= { traps 2 }
+
+mdsAuthEventMIBConformance  OBJECT IDENTIFIER ::= { mdsAuthEventMIB 3 }
+mdsAuthEventMIBCompliances OBJECT IDENTIFIER ::= { mdsAuthEventMIBConformance 1 }
+mdsAuthEventMIBGroups      OBJECT IDENTIFIER ::= { mdsAuthEventMIBConformance 2 }
+
+mdsAuthEventMIBCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+        "The compliance statement for SNMP entities that
+        implement the MDS-EVENT-MIB."
+    MODULE -- this module
+        MANDATORY-GROUPS {
+            mdsAuthEventNotificationsGroup
+        }
+        GROUP   mdsEventVariablesCeeGroup
+        DESCRIPTION
+            "This group is mandatory for SNMP entities that
+            support event information encoded in CEE format."
+    ::= { mdsAuthEventMIBCompliances 2 }
+
+mdsAuthEventNotificationsGroup  NOTIFICATION-GROUP
+    NOTIFICATIONS {
+        radiusServerFailure,
+        tacacsplusServerFailure
+    }
+    STATUS  current
+    DESCRIPTION
+        "The common notifications."
+    ::= { mdsAuthEventMIBGroups 1 }
+
+END

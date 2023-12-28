@@ -1,0 +1,89 @@
+MDS-OPENVPN-EVENT DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY,
+    OBJECT-TYPE,
+    NOTIFICATION-TYPE
+        FROM SNMPv2-SMI
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP,
+    NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    mdsEventMIB,
+    mdsEventVariablesCeeGroup
+        FROM MDS-EVENT-MIB;
+
+mdsOpenvpnEventMIB MODULE-IDENTITY
+    LAST-UPDATED "202112060000Z"
+    ORGANIZATION
+        "GE MDS LLC
+        http://www.gemds.com"
+    CONTACT-INFO
+        "T 1-800-474-0694 (Toll Free in North America)
+        T 585-242-9600
+        F 585-242-9620
+
+        175 Science Parkway
+        Rochester, New York 14620
+        USA"
+    DESCRIPTION
+        "Notifications from Orbit"
+    REVISION    "202112060000Z"
+    DESCRIPTION
+        "Initial revision"
+    ::= { mdsEventMIB 12 }
+
+mdsOpenvpnEventMIBNotifications OBJECT IDENTIFIER
+    ::= { mdsOpenvpnEventMIB 1 }
+traps0  OBJECT IDENTIFIER ::= { mdsOpenvpnEventMIBNotifications 1 }
+traps   OBJECT IDENTIFIER ::= { traps0 0 }
+
+openvpnState NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "OpenVPN operation state"
+    ::= { traps 1 }
+
+openvpnBadCert NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "OpenVPN certificate is not valid"
+    ::= { traps 2 }
+
+openvpnBadCa NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "OpenVPN CA certificate is not valid"
+    ::= { traps 3 }
+
+mdsOpenvpnEventMIBConformance  OBJECT IDENTIFIER ::= { mdsOpenvpnEventMIB 3 }
+mdsOpenvpnEventMIBCompliances OBJECT IDENTIFIER ::= { mdsOpenvpnEventMIBConformance 1 }
+mdsOpenvpnEventMIBGroups      OBJECT IDENTIFIER ::= { mdsOpenvpnEventMIBConformance 2 }
+
+mdsOpenvpnEventMIBCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+        "The compliance statement for SNMP entities that
+        implement the MDS-EVENT-MIB."
+    MODULE -- this module
+        MANDATORY-GROUPS {
+            mdsOpenvpnEventNotificationsGroup
+        }
+        GROUP   mdsEventVariablesCeeGroup
+        DESCRIPTION
+            "This group is mandatory for SNMP entities that
+            support event information encoded in CEE format."
+    ::= { mdsOpenvpnEventMIBCompliances 2 }
+
+mdsOpenvpnEventNotificationsGroup  NOTIFICATION-GROUP
+    NOTIFICATIONS {
+        openvpnState,
+        openvpnBadCert,
+        openvpnBadCa
+    }
+    STATUS  current
+    DESCRIPTION
+        "The common notifications."
+    ::= { mdsOpenvpnEventMIBGroups 1 }
+
+END

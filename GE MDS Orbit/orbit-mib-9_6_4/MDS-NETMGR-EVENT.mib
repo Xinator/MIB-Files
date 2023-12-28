@@ -1,0 +1,117 @@
+MDS-NETMGR-EVENT DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY,
+    OBJECT-TYPE,
+    NOTIFICATION-TYPE
+        FROM SNMPv2-SMI
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP,
+    NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    mdsEventMIB,
+    mdsEventVariablesCeeGroup
+        FROM MDS-EVENT-MIB;
+
+mdsNetmgrEventMIB MODULE-IDENTITY
+    LAST-UPDATED "202112060000Z"
+    ORGANIZATION
+        "GE MDS LLC
+        http://www.gemds.com"
+    CONTACT-INFO
+        "T 1-800-474-0694 (Toll Free in North America)
+        T 585-242-9600
+        F 585-242-9620
+
+        175 Science Parkway
+        Rochester, New York 14620
+        USA"
+    DESCRIPTION
+        "Notifications from the network manager"
+    REVISION    "202112060000Z"
+    DESCRIPTION
+        "Initial revision"
+    ::= { mdsEventMIB 7 }
+
+mdsNetmgrEventMIBNotifications OBJECT IDENTIFIER
+    ::= { mdsNetmgrEventMIB 1 }
+traps0  OBJECT IDENTIFIER ::= { mdsNetmgrEventMIBNotifications 1 }
+traps   OBJECT IDENTIFIER ::= { traps0 0 }
+
+vrrpRouterChange NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "An interface has changed VRRP router state."
+    ::= { traps 1 }
+
+dhcpClient NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "dhcpClient"
+    ::= { traps 2 }
+
+linkDownEvent NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "linkDownEvent"
+    ::= { traps 3 }
+
+linkUpEvent NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "linkUpEvent"
+    ::= { traps 4 }
+
+dnsResolutionFailure NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "A DNS lookup failed"
+    ::= { traps 5 }
+
+sfpInterfaceError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "SFP Interface Error"
+    ::= { traps 6 }
+
+sfpInterfaceLinkLoss NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "SFP Interface Link Loss"
+    ::= { traps 7 }
+
+mdsNetmgrEventMIBConformance  OBJECT IDENTIFIER ::= { mdsNetmgrEventMIB 3 }
+mdsNetmgrEventMIBCompliances OBJECT IDENTIFIER ::= { mdsNetmgrEventMIBConformance 1 }
+mdsNetmgrEventMIBGroups      OBJECT IDENTIFIER ::= { mdsNetmgrEventMIBConformance 2 }
+
+mdsNetmgrEventMIBCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+        "The compliance statement for SNMP entities that
+        implement the MDS-EVENT-MIB."
+    MODULE -- this module
+        MANDATORY-GROUPS {
+            mdsNetmgrEventNotificationsGroup
+        }
+        GROUP   mdsEventVariablesCeeGroup
+        DESCRIPTION
+            "This group is mandatory for SNMP entities that
+            support event information encoded in CEE format."
+    ::= { mdsNetmgrEventMIBCompliances 2 }
+
+mdsNetmgrEventNotificationsGroup  NOTIFICATION-GROUP
+    NOTIFICATIONS {
+        vrrpRouterChange,
+        dhcpClient,
+        linkDownEvent,
+        linkUpEvent,
+        dnsResolutionFailure,
+        sfpInterfaceError,
+        sfpInterfaceLinkLoss
+    }
+    STATUS  current
+    DESCRIPTION
+        "The common notifications."
+    ::= { mdsNetmgrEventMIBGroups 1 }
+
+END

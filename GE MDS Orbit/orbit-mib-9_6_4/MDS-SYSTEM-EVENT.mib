@@ -1,0 +1,152 @@
+MDS-SYSTEM-EVENT DEFINITIONS ::= BEGIN
+
+IMPORTS
+    MODULE-IDENTITY,
+    OBJECT-TYPE,
+    NOTIFICATION-TYPE
+        FROM SNMPv2-SMI
+    MODULE-COMPLIANCE,
+    OBJECT-GROUP,
+    NOTIFICATION-GROUP
+        FROM SNMPv2-CONF
+    mdsEventMIB,
+    mdsEventVariablesCeeGroup
+        FROM MDS-EVENT-MIB;
+
+mdsSystemEventMIB MODULE-IDENTITY
+    LAST-UPDATED "202112060000Z"
+    ORGANIZATION
+        "GE MDS LLC
+        http://www.gemds.com"
+    CONTACT-INFO
+        "T 1-800-474-0694 (Toll Free in North America)
+        T 585-242-9600
+        F 585-242-9620
+
+        175 Science Parkway
+        Rochester, New York 14620
+        USA"
+    DESCRIPTION
+        "Notifications from Orbit system"
+    REVISION    "202112060000Z"
+    DESCRIPTION
+        "Initial revision"
+    ::= { mdsEventMIB 4 }
+
+mdsSystemEventMIBNotifications OBJECT IDENTIFIER
+    ::= { mdsSystemEventMIB 1 }
+traps0  OBJECT IDENTIFIER ::= { mdsSystemEventMIBNotifications 1 }
+traps   OBJECT IDENTIFIER ::= { traps0 0 }
+
+imageCopy NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "imageCopy"
+    ::= { traps 1 }
+
+imageCorrupt NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "imageCorrupt"
+    ::= { traps 2 }
+
+reprogram NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "reprogram"
+    ::= { traps 3 }
+
+dateTimeFromNtp NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "dateTimeFromNtp"
+    ::= { traps 4 }
+
+dateTimeFromGps NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "dateTimeFromGps"
+    ::= { traps 5 }
+
+dateTimeFromUser NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "dateTimeFromUser"
+    ::= { traps 6 }
+
+dateTimeNotSet NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "dateTimeNotSet"
+    ::= { traps 7 }
+
+rebootByUser NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "rebootByUser"
+    ::= { traps 8 }
+
+passwordChanged NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "A local user's password was changed."
+    ::= { traps 9 }
+
+staleFirmwareWarning NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Stale Firmware Warning"
+    ::= { traps 10 }
+
+dateTimeError NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "Error with the date"
+    ::= { traps 11 }
+
+firewallFilter NOTIFICATION-TYPE
+    STATUS  current
+    DESCRIPTION
+        "The firewall filter match happened."
+    ::= { traps 12 }
+
+mdsSystemEventMIBConformance  OBJECT IDENTIFIER ::= { mdsSystemEventMIB 3 }
+mdsSystemEventMIBCompliances OBJECT IDENTIFIER ::= { mdsSystemEventMIBConformance 1 }
+mdsSystemEventMIBGroups      OBJECT IDENTIFIER ::= { mdsSystemEventMIBConformance 2 }
+
+mdsSystemEventMIBCompliance MODULE-COMPLIANCE
+    STATUS  current
+    DESCRIPTION
+        "The compliance statement for SNMP entities that
+        implement the MDS-EVENT-MIB."
+    MODULE -- this module
+        MANDATORY-GROUPS {
+            mdsSystemEventNotificationsGroup
+        }
+        GROUP   mdsEventVariablesCeeGroup
+        DESCRIPTION
+            "This group is mandatory for SNMP entities that
+            support event information encoded in CEE format."
+    ::= { mdsSystemEventMIBCompliances 2 }
+
+mdsSystemEventNotificationsGroup  NOTIFICATION-GROUP
+    NOTIFICATIONS {
+        imageCopy,
+        imageCorrupt,
+        reprogram,
+        dateTimeFromNtp,
+        dateTimeFromGps,
+        dateTimeFromUser,
+        dateTimeNotSet,
+        rebootByUser,
+        passwordChanged,
+        staleFirmwareWarning,
+        dateTimeError,
+        firewallFilter
+    }
+    STATUS  current
+    DESCRIPTION
+        "The common notifications."
+    ::= { mdsSystemEventMIBGroups 1 }
+
+END

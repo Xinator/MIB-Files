@@ -1,0 +1,83 @@
+Newmar Power MIB
+
+OID name,OID,access,type,
+
+General System Information OID's
+sysDescr,1.3.6.1.2.1.1.1,read only,DisplayString
+sysObjectID,1.3.6.1.2.1.1.2,read only,OBJECT IDENTIFIER
+sysUpTime,1.3.6.1.2.1.1.3,read only,TimeTicks
+sysContact,1.3.6.1.2.1.1.4,read only,DisplayString
+sysName,1.3.6.1.2.1.1.5,read only,DisplayString
+sysLocation,1.3.6.1.2.1.1.6,read only,DisplayString
+sysServices,1.3.6.1.2.1.1.7,read only,INTEGER(1..100)
+
+
+OID name,OID,access,type
+
+General Device Information OID's
+deviceInfo,1.3.6.1.4.1.29414.1.1,,other
+productTitle,1.3.6.1.4.1.29414.1.1.1,read only,DisplayString
+productVersion,1.3.6.1.4.1.29414.1.1.2,read only,DisplayString
+productFriendlyName,1.3.6.1.4.1.29414.1.1.3,read only,DisplayString
+productMacAddress,1.3.6.1.4.1.29414.1.1.4,read only,DisplayString
+productUrl,1.3.6.1.4.1.29414.1.1.5,read only,DisplayString
+alarmTripType,1.3.6.1.4.1.29414.1.1.6,read only,INTEGER(0..9)
+
+productHardware,1.3.6.1.4.1.29414.1.1.7,read only,DisplayString
+sensorCounts,1.3.6.1.4.1.29414.1.8,,other
+climateCount,1.3.6.1.4.1.29414.1.1.8.2,read only,INTEGER(0..16)
+dewpointSensorCount,1.3.6.1.4.1.29414.1.1.8.5,read only,INTEGER(0..16)
+SPM Sensor OID's
+spmTable,1.3.6.1.4.1.29414.1.2,no access,other
+spmEntry,1.3.6.1.4.1.29414.1.2.1,no access,other
+spmIndex,1.3.6.1.4.1.29414.1.2.1.1,no access,INTEGER(1..1)
+spmSerial,1.3.6.1.4.1.29414.1.2.1.2,read-only,DisplayString
+spmName,1.3.6.1.4.1.29414.1.2.1.3,read-only,DisplayString
+spmAvail,1.3.6.1.4.1.29414.1.2.1.4,read-only,Unsigned32
+spmTempC,1.3.6.1.4.1.29414.1.2.1.5,read-only,INTEGER(-50..100)
+spmTempF,1.3.6.1.4.1.29414.1.2.1.6,read-only,INTEGER(-58..212)
+spmVoltsDcA,1.3.6.1.4.1.29414.1.2.1.7,read-only,Unsigned32
+spmVoltsDcB,1.3.6.1.4.1.29414.1.2.1.8,read-only,Unsigned32
+spmVoltsDcC,1.3.6.1.4.1.29414.1.2.1.9,read-only,INTEGER(-70..10)
+spmAmps,1.3.6.1.4.1.29414.1.2.1.10,read-only,INTEGER(-110..110)
+spmVoltsAcA,1.3.6.1.4.1.29414.1.2.1.11,read-only,Unsigned32
+spmVoltsAcB,1.3.6.1.4.1.29414.1.2.1.12,read-only,Unsigned32
+spmContactA,1.3.6.1.4.1.29414.1.2.1.13,read-only,INTEGER(0..100)
+spmContactB,1.3.6.1.4.1.29414.1.2.1.14,read-only,INTEGER(0..100)
+spmContactC,1.3.6.1.4.1.29414.1.2.1.15,read-only,INTEGER(0..100)
+spmAmpsX10,1.3.6.1.4.1.29414.1.2.1.16,read-only,INTEGER(-1100..1100)
+
+
+Trap Name, Enterprise OID, General Trap Number, Specific Trap Number
+
+Trip Trap Information
+spmTestTRAP,1.3.6.1.4.1.29414,6,10101
+
+spmSpmTempCTRAP,1.3.6.1.4.1.29414,6,10205
+spmSpmTempFTRAP,1.3.6.1.4.1.29414,6,10206
+spmSpmVoltsDcATRAP,1.3.6.1.4.1.29414,6,10207
+spmSpmVoltsDcBTRAP,1.3.6.1.4.1.29414,6,10208
+spmSpmVoltsDcCTRAP,1.3.6.1.4.1.29414,6,10209
+spmSpmAmpsTRAP,1.3.6.1.4.1.29414,6,10210
+spmSpmVoltsAcATRAP,1.3.6.1.4.1.29414,6,10211
+spmSpmVoltsAcBTRAP,1.3.6.1.4.1.29414,6,10212
+spmSpmContactATRAP,1.3.6.1.4.1.29414,6,10213
+spmSpmContactBTRAP,1.3.6.1.4.1.29414,6,10214
+spmSpmContactCTRAP,1.3.6.1.4.1.29414,6,10215
+spmSpmAmpsX10TRAP,1.3.6.1.4.1.29414,6,10216
+
+
+Clear Trap Information
+spmSpmTempCCLEAR,1.3.6.1.4.1.29414,6,10205
+spmSpmTempFCLEAR,1.3.6.1.4.1.29414,6,10206
+spmSpmVoltsDcACLEAR,1.3.6.1.4.1.29414,6,10207
+spmSpmVoltsDcBCLEAR,1.3.6.1.4.1.29414,6,10208
+spmSpmVoltsDcCCLEAR,1.3.6.1.4.1.29414,6,10209
+spmSpmAmpsCLEAR,1.3.6.1.4.1.29414,6,10210
+spmSpmVoltsAcACLEAR,1.3.6.1.4.1.29414,6,10211
+spmSpmVoltsAcBCLEAR,1.3.6.1.4.1.29414,6,10212
+spmSpmContactACLEAR,1.3.6.1.4.1.29414,6,10213
+spmSpmContactBCLEAR,1.3.6.1.4.1.29414,6,10214
+spmSpmContactCCLEAR,1.3.6.1.4.1.29414,6,10215
+spmSpmAmpsX10CLEAR,1.3.6.1.4.1.29414,6,10216
+

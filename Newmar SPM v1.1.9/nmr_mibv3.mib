@@ -1,0 +1,389 @@
+
+NMR-MIB DEFINITIONS ::= BEGIN
+
+IMPORTS 
+
+
+DisplayString							FROM SNMPv2-TC
+MODULE-IDENTITY, OBJECT-TYPE, enterprises, Unsigned32, NOTIFICATION-TYPE FROM SNMPv2-SMI;
+
+newmar MODULE-IDENTITY
+	LAST-UPDATED "201102210000Z"
+	ORGANIZATION "Newmar Power"
+	CONTACT-INFO "spm@newmarpower.com"
+	DESCRIPTION "The MIB for Newmar Products"
+	::= { enterprises 29414 }
+
+newmar OBJECT IDENTIFIER
+	::= { enterprises 29414 }
+	
+spm OBJECT IDENTIFIER
+	::= { newmar 1 }
+
+deviceInfo OBJECT IDENTIFIER
+	::= { spm 1 }
+
+productTitle OBJECT-TYPE
+	SYNTAX DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Product name"
+	::= { deviceInfo 1 }
+
+productVersion OBJECT-TYPE
+	SYNTAX DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Product version"
+	::= { deviceInfo 2 }
+
+productFriendlyName OBJECT-TYPE
+	SYNTAX DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "User-assigned name"
+	::= { deviceInfo 3 }
+
+productMacAddress OBJECT-TYPE
+	SYNTAX DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Product's unique MAC address"
+	::= { deviceInfo 4 }
+
+productUrl OBJECT-TYPE
+	SYNTAX DisplayString
+	MAX-ACCESS read-only
+	STATUS current
+	DESCRIPTION "Product's main URL access point"
+	::= { deviceInfo 5 }
+
+alarmTripType OBJECT-TYPE
+        SYNTAX INTEGER(0..9)
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Type of alarm trip. 0 = None, 1 = Low, 2 = High, 3 = Unplugged"
+        ::= { deviceInfo 6 }
+
+
+productHardware OBJECT-TYPE
+        SYNTAX DisplayString
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Product's hardware type"
+        ::= { deviceInfo 7 }
+sensorCountsBase OBJECT IDENTIFIER
+	::= { deviceInfo 8 }
+	
+sensorCounts OBJECT IDENTIFIER
+	::= { sensorCountsBase 1 }
+	
+spmCount OBJECT-TYPE
+        SYNTAX INTEGER(0..16)
+        MAX-ACCESS read-only
+        STATUS current
+        DESCRIPTION "Number of System Power Modules currently plugged in"
+        ::= { sensorCounts 2 }
+        
+spmTable OBJECT-TYPE
+	SYNTAX SEQUENCE OF SpmEntry
+	MAX-ACCESS  not-accessible
+	STATUS current
+	DESCRIPTION "Newmar System Power Module"
+	::= { spm 2 }
+
+spmEntry OBJECT-TYPE
+	SYNTAX  SpmEntry
+	MAX-ACCESS  not-accessible
+	STATUS current
+	DESCRIPTION 
+		"Entry in the SPM table: each entry contains
+an index (NMRIndex) and other details"
+	INDEX { spmIndex }
+	::= { spmTable 1 }
+
+SpmEntry ::= SEQUENCE {
+	spmIndex		INTEGER,
+	spmSerial		DisplayString,
+	spmName		DisplayString,
+	spmAvail		Unsigned32,
+	spmTempC		INTEGER,
+	spmTempF		INTEGER,
+	spmVoltsDcA		Unsigned32,
+	spmVoltsDcB		Unsigned32,
+	spmVoltsDcC		INTEGER,
+	spmAmps		INTEGER,
+	spmVoltsAcA		Unsigned32,
+	spmVoltsAcB		Unsigned32,
+	spmContactA		INTEGER,
+	spmContactB		INTEGER,
+	spmContactC		INTEGER,
+	spmAmpsX10		INTEGER
+}
+
+spmIndex OBJECT-TYPE
+	SYNTAX  INTEGER(1..1)
+	MAX-ACCESS  not-accessible
+	STATUS current
+	DESCRIPTION "Table entry index value"
+	::= { spmEntry  1 }
+	
+spmSerial OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Serial Number"
+	::= { spmEntry  2 }
+	
+spmName OBJECT-TYPE
+	SYNTAX  DisplayString
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Friendly Name"
+	::= { spmEntry  3 }
+	
+spmAvail OBJECT-TYPE
+	SYNTAX  Unsigned32
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Is device currently plugged in?"
+	::= { spmEntry  4 }
+	
+spmTempC OBJECT-TYPE
+	SYNTAX  INTEGER(-50..100)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Current reading for Temperature (C)"
+	::= { spmEntry  5 }
+	
+spmTempF OBJECT-TYPE
+	SYNTAX  INTEGER(-58..212)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Current reading for Temperature (F)"
+	::= { spmEntry  6 }
+	
+spmVoltsDcA OBJECT-TYPE
+	SYNTAX  Unsigned32
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "DC Voltage Sensor A"
+	::= { spmEntry  7 }
+	
+spmVoltsDcB OBJECT-TYPE
+	SYNTAX  Unsigned32
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "DC Voltage Sensor B"
+	::= { spmEntry  8 }
+	
+spmVoltsDcC OBJECT-TYPE
+	SYNTAX  INTEGER(-70..10)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "DC Voltage Sensor C"
+	::= { spmEntry  9 }
+	
+spmAmps OBJECT-TYPE
+	SYNTAX  INTEGER(-110..110)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Differential Shunt Current Sensor"
+	::= { spmEntry  10 }
+	
+spmVoltsAcA OBJECT-TYPE
+	SYNTAX  Unsigned32
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "RMS Line Voltage"
+	::= { spmEntry  11 }
+	
+spmVoltsAcB OBJECT-TYPE
+	SYNTAX  Unsigned32
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "RMS Inverter Voltage"
+	::= { spmEntry  12 }
+	
+spmContactA OBJECT-TYPE
+	SYNTAX  INTEGER(0..100)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Dry Contact 1"
+	::= { spmEntry  13 }
+	
+spmContactB OBJECT-TYPE
+	SYNTAX  INTEGER(0..100)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Dry Contact 2"
+	::= { spmEntry  14 }
+	
+spmContactC OBJECT-TYPE
+	SYNTAX  INTEGER(0..100)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Dry Contact 3"
+	::= { spmEntry  15 }
+	
+spmAmpsX10 OBJECT-TYPE
+	SYNTAX  INTEGER(-1100..1100)
+	MAX-ACCESS  read-only
+	STATUS current
+	DESCRIPTION "Differential Shunt Current x 10 Sensor"
+	::= { spmEntry  16 }
+	
+spmTrap OBJECT IDENTIFIER ::= { spm 32767 }
+spmTrapPrefix OBJECT IDENTIFIER ::= { spmTrap 0 }
+
+spmTestNOTIFY NOTIFICATION-TYPE
+	STATUS current
+	DESCRIPTION "Test SNMP Trap"
+	::= { spmTrapPrefix 10101 }
+	
+spmSpmTempCNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmTempC, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Climate Temperature Sensor Trap"
+::= { spmTrapPrefix 10205 }
+
+spmSpmTempFNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmTempF, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Climate Temperature Sensor Trap"
+::= { spmTrapPrefix 10206 }
+
+spmSpmVoltsDcANOTIFY NOTIFICATION-TYPE
+OBJECTS { spmVoltsDcA, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "DC Voltage Sensor Trap"
+::= { spmTrapPrefix 10207 }
+
+spmSpmVoltsDcBNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmVoltsDcB, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "DC Voltage Sensor Trap"
+::= { spmTrapPrefix 10208 }
+
+spmSpmVoltsDcCNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmVoltsDcC, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "DC Voltage Sensor Trap"
+::= { spmTrapPrefix 10209 }
+
+spmSpmAmpsNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmAmps, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Differential Shunt Current Sensor Trap"
+::= { spmTrapPrefix 10210 }
+
+spmSpmVoltsAcANOTIFY NOTIFICATION-TYPE
+OBJECTS { spmVoltsAcA, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "RMS Line Voltage Sensor Trap"
+::= { spmTrapPrefix 10211 }
+
+spmSpmVoltsAcBNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmVoltsAcB, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "RMS Inverter Voltage Sensor Trap"
+::= { spmTrapPrefix 10212 }
+
+spmSpmContactANOTIFY NOTIFICATION-TYPE
+OBJECTS { spmContactA, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Dry Contact 1 Sensor Trap"
+::= { spmTrapPrefix 10213 }
+
+spmSpmContactBNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmContactB, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Dry Contact 2 Sensor Trap"
+::= { spmTrapPrefix 10214 }
+
+spmSpmContactCNOTIFY NOTIFICATION-TYPE
+OBJECTS { spmContactC, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Dry Contact 3 Sensor Trap"
+::= { spmTrapPrefix 10215 }
+
+spmSpmAmpsX10NOTIFY NOTIFICATION-TYPE
+OBJECTS { spmAmpsX10, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Differential Shunt Current x 10 Sensor Trap"
+::= { spmTrapPrefix 10216 }
+
+spmSpmTempCCLEAR NOTIFICATION-TYPE
+OBJECTS { spmTempC, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Climate Temperature Sensor Clear"
+::= { spmTrapPrefix 10205 }
+
+spmSpmTempFCLEAR NOTIFICATION-TYPE
+OBJECTS { spmTempF, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Climate Temperature Sensor Clear"
+::= { spmTrapPrefix 10206 }
+
+spmSpmVoltsDcACLEAR NOTIFICATION-TYPE
+OBJECTS { spmVoltsDcA, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "DC Voltage Sensor Clear"
+::= { spmTrapPrefix 10207 }
+
+spmSpmVoltsDcBCLEAR NOTIFICATION-TYPE
+OBJECTS { spmVoltsDcB, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "DC Voltage Sensor Clear"
+::= { spmTrapPrefix 10208 }
+
+spmSpmVoltsDcCCLEAR NOTIFICATION-TYPE
+OBJECTS { spmVoltsDcC, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "DC Voltage Sensor Clear"
+::= { spmTrapPrefix 10209 }
+
+spmSpmAmpsCLEAR NOTIFICATION-TYPE
+OBJECTS { spmAmps, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Differential Shunt Current Sensor Clear"
+::= { spmTrapPrefix 10210 }
+
+spmSpmVoltsAcACLEAR NOTIFICATION-TYPE
+OBJECTS { spmVoltsAcA, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "RMS Line Voltage Sensor Clear"
+::= { spmTrapPrefix 10211 }
+
+spmSpmVoltsAcBCLEAR NOTIFICATION-TYPE
+OBJECTS { spmVoltsAcB, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "RMS Inverter Voltage Sensor Clear"
+::= { spmTrapPrefix 10212 }
+
+spmSpmContactACLEAR NOTIFICATION-TYPE
+OBJECTS { spmContactA, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Dry Contact 1 Sensor Clear"
+::= { spmTrapPrefix 10213 }
+
+spmSpmContactBCLEAR NOTIFICATION-TYPE
+OBJECTS { spmContactB, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Dry Contact 2 Sensor Clear"
+::= { spmTrapPrefix 10214 }
+
+spmSpmContactCCLEAR NOTIFICATION-TYPE
+OBJECTS { spmContactC, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Dry Contact 3 Sensor Clear"
+::= { spmTrapPrefix 10215 }
+
+spmSpmAmpsX10CLEAR NOTIFICATION-TYPE
+OBJECTS { spmAmpsX10, spmName, productFriendlyName, alarmTripType }
+STATUS current
+DESCRIPTION "Differential Shunt Current x 10 Sensor Clear"
+::= { spmTrapPrefix 10216 }
+
+END
+
